@@ -1,20 +1,23 @@
-# Use Node 18 as parent image
-FROM node:18
+# Use an official Node.js runtime as the base image
+FROM node:14
 
-# Change the working directory on the Docker image to /app
-WORKDIR /app
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to the /app directory
-COPY package.json package-lock.json ./
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install project dependencies
+RUN npm install --quiet
 
-# Copy the rest of project files into this image
+# Upgrade multer to the specified version
+RUN npm install multer@1.4.4-lts.1 --quiet
+
+# Copy the rest of the application code
 COPY . .
 
-# Expose application port
+# Expose the port the app runs on
 EXPOSE 3000
 
-# Start the application
-CMD npm start
+# Start the Node.js application
+CMD ["node", "app.js"]
